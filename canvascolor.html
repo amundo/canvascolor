@@ -1,0 +1,62 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>get color at cursor from canvas</title>
+</head>
+<body>
+  <h1>get color at cursor from canvas</h1>
+
+<canvas id="example" width="200" height="60"></canvas>
+<div id="display">
+  <span id=swatch style=display:inline-block;width:1em;height:1em;></span>
+  <span id=coords> </span>
+</div>
+
+<script>
+
+var findPos = obj => {
+    var curleft = 0, curtop = 0;
+    if (obj.offsetParent) {
+        do {
+            curleft += obj.offsetLeft;
+            curtop += obj.offsetTop;
+        } while (obj = obj.offsetParent);
+        return { x: curleft, y: curtop };
+    }
+    return undefined;
+}
+
+var rgbToHex = (r, g, b) => {
+    if (r > 255 || g > 255 || b > 255)
+        throw "Invalid color component";
+    return ((r << 16) | (g << 8) | b).toString(16);
+}
+
+var 
+  example = document.querySelector('canvas'),
+  coords  = document.querySelector('#display #coords'),
+  displaySwatch  = document.querySelector('#display span#swatch'),
+  context = example.getContext('2d');
+
+context.fillStyle = "rgb(255,0,0)";
+context.fillRect(0, 0, 50, 50);
+context.fillStyle = "rgb(0,0,255)";
+context.fillRect(55, 0, 50, 50);
+
+example.addEventListener('mousemove', e => {
+    var pos = findPos(e.target);
+    var x = e.pageX - pos.x;
+    var y = e.pageY - pos.y;
+    var xy = "x=" + x + ", y=" + y;
+    var p = context.getImageData(x, y, 1, 1).data; 
+    var hex = "#" + ("000000" + rgbToHex(p[0], p[1], p[2])).slice(-6);
+    coords.textContent = xy;
+    displaySwatch.style.backgroundColor = hex;
+});
+
+</script>
+  
+
+</body>
+</html>
