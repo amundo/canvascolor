@@ -7,7 +7,10 @@
 <body>
   <h1>get color at cursor from canvas</h1>
 
-<canvas id="example" width="200" height="60"></canvas>
+<img width=600 height=443 style=display:none src=small_colors.jpg />
+
+<canvas width="200" height="60"></canvas>
+
 <div id="display">
   <span id=swatch style=display:inline-block;width:1em;height:1em;></span>
   <span id=coords> </span>
@@ -34,17 +37,23 @@ var rgbToHex = (r, g, b) => {
 }
 
 var 
-  example = document.querySelector('canvas'),
+  img = document.querySelector('img'),
+  canvas = document.querySelector('canvas'),
   coords  = document.querySelector('#display #coords'),
   displaySwatch  = document.querySelector('#display span#swatch'),
-  context = example.getContext('2d');
+  context = canvas.getContext('2d');
+
+canvas.width = img.width;
+canvas.height = img.height;
 
 context.fillStyle = "rgb(255,0,0)";
 context.fillRect(0, 0, 50, 50);
 context.fillStyle = "rgb(0,0,255)";
 context.fillRect(55, 0, 50, 50);
 
-example.addEventListener('mousemove', e => {
+context.drawImage(img, 0, 0);
+
+canvas.addEventListener('mousemove', e => {
     var pos = findPos(e.target);
     var x = e.pageX - pos.x;
     var y = e.pageY - pos.y;
